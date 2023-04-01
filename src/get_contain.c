@@ -25,7 +25,7 @@ char **get_arg_files(int argc, char **argv, int i)
     return files;
 }
 
-t_directory *get_dir_files(char **files, int *i)
+t_directory *get_dir_files(char **files, int *i, bool *error)
 {
     t_directory *head = NULL;
 
@@ -34,7 +34,12 @@ t_directory *get_dir_files(char **files, int *i)
         struct stat st;
         if (stat(files[j], &st) != 0)
         {
+            mx_printerr("uls: ");
+            mx_printerr(files[j]);
+            mx_printerr(": ");
             mx_printerr(strerror(errno));
+            mx_printerr("\n");
+            (*error) = true;
             continue;
         }
 
@@ -58,7 +63,7 @@ t_directory *get_dirs(char **files)
         struct stat st;
         if (stat(files[i], &st) != 0)
         {
-            mx_printerr(strerror(errno));
+            // mx_printerr(strerror(errno));
             continue;
         }
 

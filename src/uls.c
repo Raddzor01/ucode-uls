@@ -15,10 +15,10 @@ bool uls(int argc, char **argv, t_flags *flags, int i)
     else
         mx_bubble_sort(arg_files, file_count, false);
 
-    head = get_dir_files(arg_files, &i);
+    head = get_dir_files(arg_files, &i, &error);
     if (head != NULL)
     {
-            sort_list_by_flag(&head, flags);
+        sort_list_by_flag(&head, flags);
         if (flags->l)
             print_l_flag(&head, flags, true);
         else
@@ -49,7 +49,8 @@ bool uls(int argc, char **argv, t_flags *flags, int i)
 
     int dir_count = argc - i;
 
-    error = print_directories(&head, flags, not_single, dir_count);
+    if(print_directories(&head, flags, not_single, dir_count) == 1)
+        error = true;
 
     mx_del_strarr(&arg_files);
     return error;

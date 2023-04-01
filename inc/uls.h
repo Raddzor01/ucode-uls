@@ -2,7 +2,6 @@
 
 #include "../libmx/inc/libmx.h"
 #include <dirent.h>
-#include <dirent.h>
 #include <errno.h>
 #include <grp.h>
 #include <pwd.h>
@@ -14,8 +13,6 @@
 #include <sys/xattr.h>
 #include <unistd.h>
 #include <time.h>
-#include <getopt.h>
-#include <stdio.h>
 
 #define IS_R(m) (m & S_IRUSR && m & S_IRGRP && m & S_IROTH)
 #define IS_X(m) (m & S_IXUSR && m & S_IXGRP && m & S_IXOTH)
@@ -57,7 +54,7 @@ bool uls(int argc, char **argv, t_flags *flags, int i);
 void print_l_flag(t_directory **dir, t_flags *flags, bool is_file);
 
 char **get_arg_files(int argc, char **argv, int i);
-t_directory *get_dir_files(char **files, int *i);
+t_directory *get_dir_files(char **files, int *i, bool *error);
 t_directory *get_dirs(char **files);
 
 void list_push_back(t_directory **list, char *dir_name, char *file_name);

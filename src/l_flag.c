@@ -1,5 +1,7 @@
 #include "../inc/uls.h"
 
+// #define XATTR_SIZE_MAX 10000
+
 off_t mx_get_total_blocks(t_directory **files)
 {
     off_t total = 0;
@@ -29,45 +31,45 @@ void print_acl_params(char **acl_pr, int i)
     mx_printchar('\n');
 }
 
-// @ flag, macos only
+// // @ flag, macos only
 // void print_file_xattr(char *path, ssize_t buffer_len, char *attr_name, char *value)
 // {
-//     int value_len = 0;
-//     for (int i = 0; i < buffer_len; i += mx_strlen(&attr_name[i]) + 1)
-//     {
+//      int value_len = 0;
+//      for (int i = 0; i < buffer_len; i += mx_strlen(&attr_name[i]) + 1)
+//      {
 //         mx_printstr("\t");
 //         mx_printstr(&attr_name[i]);
 //         value_len = getxattr(path, &attr_name[i], value, XATTR_SIZE_MAX, 0, 0);
 //         mx_printstr("\t   ");
 //         if (value_len != -1)
 //             mx_printint(value_len);
-//         else
+//          else
 //             mx_printint(0);
 
 //         mx_printstr(" \n");
-//     }
-// }
+//      }
+//  }
 
-// -e flag, macos only
-// void print_acl_info(char *acl_str)
-// {
-//     char **acl_strarr = mx_strsplit(acl_str, '\n');
-//     for (int i = 1; acl_strarr[i] != NULL; i++)
-//     {
-//         char **acl_pr = mx_strsplit(acl_strarr[i], ':');
-//         mx_output_acl_params(acl_pr, i - 1);
-//         mx_del_strarr(&acl_pr);
-//     }
-//     mx_del_strarr(&acl_strarr);
-// }
+// // -e flag, macos only
+//  void print_acl_info(char *acl_str)
+//  {
+//      char **acl_strarr = mx_strsplit(acl_str, '\n');
+//      for (int i = 1; acl_strarr[i] != NULL; i++)
+//      {
+//          char **acl_pr = mx_strsplit(acl_strarr[i], ':');
+//          print_acl_params(acl_pr, i - 1);
+//          mx_del_strarr(&acl_pr);
+//      }
+//      mx_del_strarr(&acl_strarr);
+//  }
 
 void print_row(const t_directory *dir, t_flags *flags)
 {
     char filetype = '?';
-    if (S_ISLNK(dir->stat.st_mode))
-        filetype = 'l';
     if (S_ISDIR(dir->stat.st_mode))
         filetype = 'd';
+    if((dir->stat.st_mode & S_IFMT) == S_IFLNK)
+	    filetype = 'l';
     if (S_ISCHR(dir->stat.st_mode))
         filetype = 'c';
     if (S_ISBLK(dir->stat.st_mode))
@@ -101,19 +103,19 @@ void print_row(const t_directory *dir, t_flags *flags)
         mode[8] = 'x';
 
     // get additional permisions(macos only)
-    // char attribute_name[XATTR_SIZE_MAX];
-    // char value[XATTR_SIZE_MAX];
-    // ssize_t buffer_len = listxattr(dir->path, attribute_name, XATTR_SIZE_MAX, XATTR_NOFOLLOW);
-    // acl_t acl_info = acl_get_file(dir->path, ACL_TYPE_EXTENDED);
+    //  char attribute_name[XATTR_SIZE_MAX];
+    //  char value[XATTR_SIZE_MAX];
+    //  ssize_t buffer_len = listxattr(dir->path, attribute_name, XATTR_SIZE_MAX, XATTR_NOFOLLOW);
+    //  acl_t acl_info = acl_get_file(dir->path, ACL_TYPE_EXTENDED);
 
-    // if (buffer_len > 0)
-    //     mode[9] = '@';
-    // else if (acl_info != NULL)
-    //     mode[9] = '+';
+    //  if (buffer_len > 0)
+    //      mode[9] = '@';
+    //  else if (acl_info != NULL)
+    //      mode[9] = '+';
 
-    // char *acl_str = NULL;
-    // if (flags->e)
-    //     acl_str = acl_to_text(acl_info, NULL);
+    //  char *acl_str = NULL;
+    //  if (flags->e)
+    //      acl_str = acl_to_text(acl_info, NULL);
 
     int nlinks = dir->stat.st_nlink;
 
@@ -138,7 +140,8 @@ void print_row(const t_directory *dir, t_flags *flags)
         time = dir->stat.st_mtime;
 
     char *time_str = ctime(&time);
-    char **full_date = mx_strsplit(time_str, ' ');
+    char **full_date =
+ mx_strsplit(time_str, ' ');
 
     char *linked_file = mx_strnew(dir->stat.st_size);
     int bytes;
@@ -167,7 +170,8 @@ void print_row(const t_directory *dir, t_flags *flags)
 
     if (flags->T)
         write(1, &time_str[11], 13);
-    else if ((current_time - time) > 15552000 || ((current_time - time) < 0 && (current_time - time) > -15552000))
+    else if ((current_time - time) > 15552000 
+    || ((current_time - time) < 0 && (current_time - time) > -15552000))
         write(1, full_date[4], 4);
     else
         write(1, full_date[3], 5);
@@ -188,11 +192,11 @@ void print_row(const t_directory *dir, t_flags *flags)
     mx_printchar('\n');
 
     // -@e flags, macos only
-    // if (flags->extended_attr && flags->file_per_line && buffer_len > 0)
-    //     print_file_xattr(dir->path, buffer_len, attribute_name, value);
+    //  if (flags->extended_attr && flags->file_per_line && buffer_len > 0)
+    //      print_file_xattr(dir->path, buffer_len, attribute_name, value);
 
-    // if (acl_str)
-    //     print_acl_info(acl_str);
+    //  if (acl_str)
+    //      print_acl_info(acl_str);
 
     mx_del_strarr(&full_date);
 }

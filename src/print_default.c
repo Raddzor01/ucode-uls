@@ -41,7 +41,8 @@ int calc_num_tabs(int col_width, int name_len)
 
 void print_tabs(int num_tabs)
 {
-    for (int i = 0; i < num_tabs; i++)
+    int i;
+    for (i = 0; i < num_tabs; i++)
         mx_printchar('\t');
 }
 
@@ -69,7 +70,6 @@ void print_rows(t_directory **files, int col_width, int rows, int num_names, t_f
                 print_G_flag(file->name, file->stat.st_mode);
             else
                 mx_printstr(file->name);
-                
             if (file->next && (j + rows < num_names))
                 print_tabs(calc_num_tabs(col_width, mx_strlen(file->name)));
         }
@@ -110,12 +110,13 @@ void mx_output_default(t_directory **files, t_flags *flags)
 {
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
-    int col_width = calc_col_width(files);
+    int win_cols = w.ws_col;
 
+    int col_width = calc_col_width(files);
     if ((!isatty(1) || flags->file_per_line) && !flags->C)
         print_file_names(files, col_width, get_max_name_length(files), flags);
     else if (isatty(1) && !flags->file_per_line && !flags->C)
-        print_file_names(files, col_width, w.ws_col, flags);
+        print_file_names(files, col_width, win_cols, flags);
     else
         print_file_names(files, col_width, 80, flags);
 }

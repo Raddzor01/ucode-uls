@@ -68,7 +68,7 @@ bool print_directory(t_directory *dir_entity, t_flags *flags, bool not_single)
     }
     closedir(dir);
 
-    if (not_single || (flags->R))
+    if (not_single)
     {
         mx_printstr(dir_entity->path);
         mx_printstr(":");
