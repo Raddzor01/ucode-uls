@@ -86,7 +86,7 @@ static void print_row(const t_directory *dir, t_flags *flags, t_col_width column
 
 void print_l_flag(t_directory **dir, t_flags *flags, bool is_file)
 {
-    if (!is_file)
+    if (!is_file && *dir)
     {
         blkcnt_t total_blocks = get_total_blocks(*dir);
         char *block_str = mx_ltoa(total_blocks);
