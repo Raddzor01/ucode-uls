@@ -17,8 +17,7 @@ void list_push_back(t_directory **list, char *dir_name, char *file_name)
     }
     else
         new_node->path = mx_strdup(file_name);
-
-    if (stat(new_node->path, &new_node->stat) == -1)
+    if (lstat(new_node->path, &new_node->stat) == -1)
     {
         mx_printerr("uls: ");
         mx_printerr(new_node->name);

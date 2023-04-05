@@ -23,6 +23,8 @@ int mx_sqrt(int x);
 char *mx_nbr_to_hex(unsigned long nbr);
 unsigned long mx_hex_to_nbr(const char *hex);
 char *mx_itoa(int number);
+char *mx_ltoa(long long number);
+double mx_round(double num);
 void mx_foreach(const int *arr, int size, void(*f)(int));
 int mx_binary_search(char **arr, int size, const char *s, int *count);
 int mx_bubble_sort(char **arr, int size, bool reverse);

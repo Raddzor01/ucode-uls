@@ -1,70 +1,24 @@
 #include "../inc/uls.h"
 
-bool mx_is_implied_dir(const char *dir_name)
-{
-    return (!mx_strcmp(dir_name, ".") || !mx_strcmp(dir_name, ".."));
-}
-
-bool mx_is_hidden_file(const char *name)
-{
-    return (name[0] == '.');
-}
-
-bool mx_a_flags_applied(t_flags *flags, char *file_name)
-{
-    if (!flags->a && !flags->A && (mx_is_hidden_file(file_name) || mx_is_implied_dir(file_name)))
-        return false;
-
-    if (flags->A && (mx_is_implied_dir(file_name)))
-        return false;
-    return true;
-}
-
-void mx_print_names(t_directory *list)
-{
-    while (list)
-    {
-        mx_printstr(list->name);
-        mx_printchar('\n');
-        list = list->next;
-    }
-}
-
 bool print_directory(t_directory *dir_entity, t_flags *flags, bool not_single)
 {
     DIR *dir;
-    struct dirent *entery;
+    struct dirent *entry;
     t_directory *inner_files = NULL;
 
     dir = opendir(dir_entity->path);
     if (dir == NULL)
     {
-        if (errno == EACCES)
-        {
-            if (not_single)
-            {
-                mx_printstr(dir_entity->name);
-                mx_printstr(":\n");
-            }
-            mx_printerr("uls: ");
-            mx_printerr(dir_entity->name);
-            mx_printerr(strerror(errno));
-            mx_printerr("\n");
-            return true;
-        }
-        mx_printerr("uls: ");
-        mx_printerr(dir_entity->name);
-        mx_printerr(": ");
-        mx_printerr(strerror(errno));
-        mx_printerr("\n");
+        errors_check(not_single, dir_entity, flags->l);
         return true;
-
     }
-    while ((entery = readdir(dir)) != NULL)
+    while ((entry = readdir(dir)) != NULL)
     {
-        if (!mx_a_flags_applied(flags, entery->d_name))
+        if ((!flags->a && !flags->A && ((entry->d_name[0] == '.') || impiled_dir_check(entry->d_name))) // without -aA flags check
+            || (flags->A && impiled_dir_check(entry->d_name))                                           // -A flag check
+            || uls_file_check(entry->d_name, dir_entity->name))                                         // check if uls file in dir
             continue;
-        list_push_back(&inner_files, dir_entity->path, entery->d_name);
+        list_push_back(&inner_files, dir_entity->path, entry->d_name);
     }
     closedir(dir);
 
@@ -75,19 +29,15 @@ bool print_directory(t_directory *dir_entity, t_flags *flags, bool not_single)
         mx_printstr("\n");
     }
 
-    sort_list_by_flag(&inner_files, flags);
-
-    if (flags->l)
-        print_l_flag(&inner_files, flags, false);
-    else
-        mx_output_default(&inner_files, flags);
+    handle_print_type(false, &inner_files, flags);
 
     if (flags->R)
     {
         t_directory *current_file = inner_files;
         while (current_file)
         {
-            if ((S_ISDIR(current_file->stat.st_mode)) && !mx_is_implied_dir(current_file->name))
+            if ((S_ISDIR(current_file->stat.st_mode))
+            && !impiled_dir_check(current_file->name))
             {
                 mx_printchar('\n');
                 print_directory(current_file, flags, true);
@@ -103,7 +53,7 @@ bool print_directory(t_directory *dir_entity, t_flags *flags, bool not_single)
 
 bool print_directories(t_directory **head, t_flags *flags, bool not_single, int dir_count)
 {
-    bool error = false; 
+    bool error = false;
     int dir_idx = 0;
     t_directory *dir = *head;
 

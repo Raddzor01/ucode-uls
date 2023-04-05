@@ -47,7 +47,7 @@ t_directory *get_dir_files(char **files, int *i, bool *error)
         if (!S_ISDIR(st.st_mode))
         {
             ++(*i);
-            list_push_back(&head, ".", files[j]);
+            list_push_back(&head, NULL, files[j]);
         }
     }
 

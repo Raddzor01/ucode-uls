@@ -19,6 +19,13 @@ void flags_init(t_flags **flags)
     (*flags)->C = false;
     (*flags)->file_per_line = false;
     (*flags)->f = false;
+    (*flags)->m = false;
+    (*flags)->F = false;
+    (*flags)->p = false;
+    (*flags)->m = false;
+    (*flags)->n = false;
+    (*flags)->g = false;
+    (*flags)->o = false;
 }
 
 void add_flag(t_flags **flags, char flag)
@@ -29,11 +36,13 @@ void add_flag(t_flags **flags, char flag)
         (*flags)->file_per_line = true;
         (*flags)->l = false;
         (*flags)->C = false;
+        (*flags)->m = false;
         break;
     case 'l':
         (*flags)->l = true;
         (*flags)->C = false;
         (*flags)->file_per_line = false;
+        (*flags)->m = false;
         break;
     case 'R':
         (*flags)->R = true;
@@ -79,12 +88,43 @@ void add_flag(t_flags **flags, char flag)
         (*flags)->l = false;
         (*flags)->file_per_line = false;
         break;
+    case 'h':
+        (*flags)->h = true;
+        break;
+    case '@':
+        (*flags)->extended_attr = true;
+        break;
+    case 'e':
+        (*flags)->e = true;
+        break;
+    case 'm':
+        (*flags)->m = true;
+        (*flags)->file_per_line = false;
+        (*flags)->l = false;
+        break;
+    case 'F':
+        (*flags)->F = true;
+        (*flags)->p = false;
+        break;
+    case 'p':
+        (*flags)->p = true;
+        (*flags)->F =false;
+        break;
+    case 'n':
+        (*flags)->n = true;
+        break;
+    case 'g':
+        (*flags)->g = true;
+        break;
+    case 'o':
+        (*flags)->o = true;
+        break;
     default:
 
         mx_printerr("uls: illegal option -- ");
         write(2, &flag, 1);
         mx_printerr("\n");
-        mx_printerr("usage: uls [--Aal1cTGcSutrfR] [file ...]\n");
+        mx_printerr("usage: uls [--Aal1cTGcSutrfmRpnFe@] [file ...]\n");
 
         free(*flags);
         flags = NULL;

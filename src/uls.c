@@ -18,11 +18,7 @@ bool uls(int argc, char **argv, t_flags *flags, int i)
     head = get_dir_files(arg_files, &i, &error);
     if (head != NULL)
     {
-        sort_list_by_flag(&head, flags);
-        if (flags->l)
-            print_l_flag(&head, flags, true);
-        else
-            mx_output_default(&head, flags);
+        handle_print_type(true, &head, flags);
         not_single = true;
 
         for (int j = 0; arg_files[j] != NULL; ++j)
