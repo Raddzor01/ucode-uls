@@ -29,7 +29,7 @@ do
             echo "Test failed: ${TESTS[$i-1]}"
             echo "$OUTPUT"
         else
-            echo "Success: ${TESTS[$i-1]}"
+            echo "Success test ${i}"
         fi
     fi
 done
