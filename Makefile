@@ -23,7 +23,7 @@ MAKE_LIB = make -sC
 all: $(LIB_A) $(NAME) clean
 
 $(NAME): $(OBJ_FILES)
-	$(CC) $(CFLAGS) $(OBJ_FILES) -L$(LIB_DIR) -lmx -o $@
+	$(CC) $(CFLAGS) $(OBJ_FILES) -L$(LIB_DIR) -lmx -o $@ -s
 
 $(OBJ_FILES): | $(OBJ_DIR)
 
