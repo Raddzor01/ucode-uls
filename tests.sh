@@ -15,8 +15,8 @@ TESTS=(
 
 for i in "${!TESTS[@]}"
 do
+    echo "Starting test $i: ${TESTS[$i]}"
     if [[ $i == *"desc"* ]]; then
-        # Вывод описания теста
         echo "${TESTS[$i]}"
     else
         # Выполнение тестового сценария
@@ -28,7 +28,7 @@ do
             echo "Test failed: ${TESTS[$i]}"
             echo "$OUTPUT"
         else
-            echo "Success: ${TESTS[$i]}"
+            echo "Success test $i}"
         fi
     fi
 done
