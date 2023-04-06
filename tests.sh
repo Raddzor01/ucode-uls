@@ -25,10 +25,10 @@ do
         # Проверка результата выполнения теста
         if [ "$OUTPUT" != "" ]
         then
-            echo "Test failed: ${TESTS[$i-1]}"
+            echo "Test failed: ${TESTS[$i]}"
             echo "$OUTPUT"
         else
-            echo "Success: ${TESTS[$i-1]}"
+            echo "Success: ${TESTS[$i]}"
         fi
     fi
 done
