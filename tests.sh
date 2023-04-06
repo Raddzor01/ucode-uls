@@ -19,7 +19,7 @@ do
         echo "${TESTS[$i]}"
     else
         if [ -n "${TESTS[$i]}" ]; then
-            OUTPUT=$(eval "${TESTS[$i]}")
+            OUTPUT=$(bash -c "${TESTS[$i]}")
         else
             OUTPUT=$(./uls -a)
         fi
