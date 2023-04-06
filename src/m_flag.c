@@ -7,7 +7,7 @@ static int term_width()
     return ws.ws_col;
 }
 
-void print_m_flag(t_directory **files, t_flags *flags)
+void print_m_flag(t_directory **files, const t_flags *flags)
 {
     int win_cols = isatty(1) ? term_width() : CAT_SIZE;
     t_directory *file = *files;
@@ -22,7 +22,7 @@ void print_m_flag(t_directory **files, t_flags *flags)
 
         check_name_printtype(file, flags);
 
-        if(file->next != NULL)
+        if(file->next)
             mx_printstr(", ");
         else
             mx_printchar('\n');

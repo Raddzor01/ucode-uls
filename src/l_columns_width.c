@@ -1,56 +1,71 @@
 #include "../inc/uls.h"
 
-t_col_width columns_width(t_directory **files, t_flags *flags)
+static void set_col_width(int *dest, int src)
+{
+    if (*dest < src)
+        *dest = src;
+}
+
+static t_col_width cols_width_init()
 {
     t_col_width cols_width;
     cols_width.group_length = 0;
     cols_width.links_length = 0;
     cols_width.size_length = 0;
     cols_width.user_length = 0;
+    return cols_width;
+}
+
+t_col_width columns_width(t_directory **files, bool n_flag, bool h_flag)
+{
+    t_col_width cols_width = cols_width_init();
+    struct passwd *pwd;
+    struct group *grp;
+    char *pdw_str = NULL;
+    char *grp_str = NULL;
+    char *links = NULL;
+    char *wsize = NULL;
 
     t_directory *file = *files;
     while (file)
     {
-        char *links = mx_ltoa(file->stat.st_nlink);
-        if (cols_width.links_length < mx_strlen(links))
-            cols_width.links_length = mx_strlen(links);
+        links = mx_ltoa(file->stat.st_nlink);
+        set_col_width(&cols_width.links_length, mx_strlen(links));
         mx_strdel(&links);
 
-        struct passwd *pwd = getpwuid(file->stat.st_uid);
-        char *pdw_str = NULL;
-        if (flags->n)
+        pwd = getpwuid(file->stat.st_uid);
+        grp = getgrgid(file->stat.st_gid);
+
+        if (n_flag)
+        {
             pdw_str = mx_itoa(pwd->pw_uid);
-        else
-            pdw_str = pwd ? mx_strdup(pwd->pw_name) : mx_strdup("unknown");
-        if (cols_width.user_length < mx_strlen(pdw_str))
-            cols_width.user_length = mx_strlen(pdw_str);
-        mx_strdel(&pdw_str);
-
-        struct group *grp = getgrgid(file->stat.st_gid);
-        char *grp_str = NULL;
-        if (flags->n)
             grp_str = mx_itoa(grp->gr_gid);
+        }
         else
-            grp_str = grp ? mx_strdup(grp->gr_name) : mx_strdup("unknown");
-        if (cols_width.group_length < mx_strlen(grp_str))
-            cols_width.group_length = mx_strlen(grp_str);
-        mx_strdel(&grp_str);
+        {
+            pdw_str = pwd ? mx_strdup(pwd->pw_name) : mx_ltoa(file->stat.st_uid);
+            grp_str = grp ? mx_strdup(grp->gr_name) : mx_ltoa(file->stat.st_gid);
+        }
 
+        set_col_width(&cols_width.user_length, mx_strlen(pdw_str));
+        set_col_width(&cols_width.group_length, mx_strlen(grp_str));
+
+        mx_strdel(&pdw_str);
+        mx_strdel(&grp_str);
+        
         int size_len = 5;
         if (S_ISCHR(file->stat.st_mode) || S_ISBLK(file->stat.st_mode))
         {
-            char *wsize = mx_nbr_to_hex(file->stat.st_rdev);
+            wsize = mx_nbr_to_hex(file->stat.st_rdev);
             size_len = mx_strlen(wsize) + 2;
-            mx_strdel(&wsize);
         }
-        else if (!flags->h)
+        else if (!h_flag)
         {
-            char *wsize = mx_ltoa(file->stat.st_size);
+            wsize = mx_ltoa(file->stat.st_size);
             size_len = mx_strlen(wsize);
-            mx_strdel(&wsize);
         }
-        if (cols_width.size_length < size_len)
-            cols_width.size_length = size_len;
+        set_col_width(&cols_width.size_length, size_len);
+        mx_strdel(&wsize);
 
         file = file->next;
     }

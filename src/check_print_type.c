@@ -1,6 +1,6 @@
 #include "../inc/uls.h"
 
-void check_name_printtype(const t_directory *file, t_flags *flags)
+void check_name_printtype(const t_directory *file, const t_flags *flags)
 {
     if (flags->G && isatty(1))
         print_G_flag(file->name, file->stat.st_mode);

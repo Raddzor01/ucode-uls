@@ -17,6 +17,7 @@ void list_push_back(t_directory **list, char *dir_name, char *file_name)
     }
     else
         new_node->path = mx_strdup(file_name);
+        
     if (lstat(new_node->path, &new_node->stat) == -1)
     {
         mx_printerr("uls: ");
@@ -39,35 +40,4 @@ void list_push_back(t_directory **list, char *dir_name, char *file_name)
         head = head->next;
 
     head->next = new_node;
-}
-
-int list_size(t_directory *list)
-{
-    t_directory *node = list;
-    int size = 0;
-
-    while (node != NULL)
-    {
-        node = node->next;
-        size++;
-    }
-
-    return size;
-}
-
-void list_free(t_directory **head)
-{
-    t_directory *current = *head;
-    t_directory *next;
-
-    while (current)
-    {
-        next = current->next;
-        mx_strdel(&current->name);
-        mx_strdel(&current->path);
-        free(current);
-        current = next;
-    }
-
-    *head = NULL;
 }

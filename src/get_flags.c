@@ -1,6 +1,6 @@
 #include "../inc/uls.h"
 
-void flags_init(t_flags **flags)
+static void flags_init(t_flags **flags)
 {
     (*flags)->a = false;
     (*flags)->A = false;
@@ -28,7 +28,7 @@ void flags_init(t_flags **flags)
     (*flags)->o = false;
 }
 
-void add_flag(t_flags **flags, char flag)
+static void add_flag(t_flags **flags, const char flag)
 {
     switch (flag)
     {
@@ -124,8 +124,8 @@ void add_flag(t_flags **flags, char flag)
         mx_printerr("uls: illegal option -- ");
         write(2, &flag, 1);
         mx_printerr("\n");
-        mx_printerr("usage: uls [--Aal1cTGcSutrfmRpnFe@] [file ...]\n");
-
+        mx_printerr("usage: uls [-@ACFGHRSTUacefghlmnopqrtux1] [file ...]\n");
+        
         free(*flags);
         flags = NULL;
 

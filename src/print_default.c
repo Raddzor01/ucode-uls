@@ -1,6 +1,6 @@
 #include "../inc/uls.h"
 
-t_directory *get_file_at_index(t_directory *file, int index)
+static t_directory *get_file_at_index(t_directory *file, int index)
 {
     int i = 0;
     while (file != NULL)
@@ -13,7 +13,7 @@ t_directory *get_file_at_index(t_directory *file, int index)
     return NULL;
 }
 
-int get_max_name_length(t_directory **files)
+static int get_max_name_length(t_directory **files)
 {
     int max_len = 0;
     t_directory *file = *files;
@@ -27,37 +27,37 @@ int get_max_name_length(t_directory **files)
     return max_len;
 }
 
-int calc_col_width(t_directory **files)
+static int calc_col_width(t_directory **files)
 {
     int col_width = get_max_name_length(files);
     return (col_width % TAB_SIZE == 0) ? col_width + TAB_SIZE : col_width + TAB_SIZE - (col_width % TAB_SIZE);
 }
 
-int calc_num_tabs(int col_width, int name_len)
+static int calc_num_tabs(int col_width, int name_len)
 {
     int difference = col_width - name_len;
     return (difference % TAB_SIZE != 0) ? difference / TAB_SIZE + 1 : difference / TAB_SIZE;
 }
 
-void print_tabs(int num_tabs)
+static void print_tabs(int num_tabs)
 {
     int i;
     for (i = 0; i < num_tabs; i++)
         mx_printchar('\t');
 }
 
-int calc_cols(int win_cols, int col_width)
+static int calc_cols(int win_cols, int col_width)
 {
     int cols = (win_cols / col_width == 0) ? 1 : win_cols / col_width;
     return (col_width * cols > win_cols && cols != 1) ? cols - 1 : cols;
 }
 
-int calc_rows(int cols, int num_names)
+static int calc_rows(int cols, int num_names)
 {
     return (num_names % cols != 0) ? num_names / cols + 1 : num_names / cols;
 }
 
-void print_rows(t_directory **files, int col_width, int rows, int num_names, t_flags *flags)
+static void print_rows(t_directory **files, int col_width, int rows, int num_names, const t_flags *flags)
 {
     int i, j;
     t_directory *file;
@@ -74,7 +74,7 @@ void print_rows(t_directory **files, int col_width, int rows, int num_names, t_f
     }
 }
 
-void print_single_row(t_directory **files, int col_width, t_flags *flags)
+static void print_single_row(t_directory **files, int col_width, const t_flags *flags)
 {
     t_directory *file = *files;
     while (file != NULL)
@@ -88,7 +88,7 @@ void print_single_row(t_directory **files, int col_width, t_flags *flags)
     mx_printchar('\n');
 }
 
-void print_file_names(t_directory **files, int col_width, int win_cols, t_flags *flags)
+static void print_file_names(t_directory **files, int col_width, int win_cols, const t_flags *flags)
 {
     int num_names = list_size(*files);
     if (num_names == 0)
@@ -101,7 +101,7 @@ void print_file_names(t_directory **files, int col_width, int win_cols, t_flags 
         print_rows(files, col_width, rows, num_names, flags);
 }
 
-void print_default(t_directory **files, t_flags *flags)
+void print_default(t_directory **files, const t_flags *flags)
 {
     struct winsize w;
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);

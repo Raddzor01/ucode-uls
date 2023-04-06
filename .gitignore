@@ -1,6 +1,6 @@
 uls
 obj
 libmx.a
-./vscode
+.vscode
 test
 .DS_Store

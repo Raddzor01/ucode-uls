@@ -17,9 +17,7 @@ char **get_arg_files(int argc, char **argv, int i)
 
     files = malloc((argc - i + 1) * sizeof(char *));
     for (j = 0; i < argc; j++, i++)
-    {
         files[j] = mx_strdup(argv[i]);
-    }
     files[j] = NULL;
 
     return files;
@@ -62,16 +60,10 @@ t_directory *get_dirs(char **files)
     {
         struct stat st;
         if (stat(files[i], &st) != 0)
-        {
-            // mx_printerr(strerror(errno));
             continue;
-        }
-
-        // check arg file for directory type
+        
         if (S_ISDIR(st.st_mode))
-        {
             list_push_back(&head, NULL, files[i]);
-        }
     }
     
     return head;

@@ -1,6 +1,6 @@
 #include "../inc/uls.h"
 
-bool uls(int argc, char **argv, t_flags *flags, int i)
+bool uls(int argc, char **argv, const t_flags *flags, int i)
 {
     char **arg_files = NULL;
     t_directory *head;
@@ -10,10 +10,7 @@ bool uls(int argc, char **argv, t_flags *flags, int i)
 
     arg_files = get_arg_files(argc, argv, i);
 
-    if (flags->r)
-        mx_bubble_sort(arg_files, file_count, true);
-    else
-        mx_bubble_sort(arg_files, file_count, false);
+    mx_bubble_sort(arg_files, file_count, flags->r);
 
     head = get_dir_files(arg_files, &i, &error);
     if (head != NULL)
@@ -28,7 +25,7 @@ bool uls(int argc, char **argv, t_flags *flags, int i)
             {
                 if (S_ISDIR(st.st_mode))
                 {
-                    mx_printstr("\n");
+                    mx_printchar('\n');
                     break;
                 }
             }
@@ -41,13 +38,12 @@ bool uls(int argc, char **argv, t_flags *flags, int i)
         mx_bubble_sort(arg_files, file_count, true);
 
     head = get_dirs(arg_files);
-    sort_list_by_flag(&head, flags);
+    mx_del_strarr(&arg_files);
 
     int dir_count = argc - i;
 
     if(print_directories(&head, flags, not_single, dir_count) == 1)
         error = true;
-
-    mx_del_strarr(&arg_files);
+        
     return error;
 }

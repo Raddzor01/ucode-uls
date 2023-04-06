@@ -1,17 +1,10 @@
 #include "../inc/uls.h"
 
-bool print_directory(t_directory *dir_entity, t_flags *flags, bool not_single)
+static t_directory *get_inner_files(DIR *dir, t_directory *dir_entity, const t_flags *flags)
 {
-    DIR *dir;
     struct dirent *entry;
     t_directory *inner_files = NULL;
 
-    dir = opendir(dir_entity->path);
-    if (dir == NULL)
-    {
-        errors_check(not_single, dir_entity, flags->l);
-        return true;
-    }
     while ((entry = readdir(dir)) != NULL)
     {
         if ((!flags->a && !flags->A && ((entry->d_name[0] == '.') || impiled_dir_check(entry->d_name))) // without -aA flags check
@@ -20,13 +13,29 @@ bool print_directory(t_directory *dir_entity, t_flags *flags, bool not_single)
             continue;
         list_push_back(&inner_files, dir_entity->path, entry->d_name);
     }
-    closedir(dir);
+    return inner_files;
+}
+
+bool print_directory(t_directory *dir_entity, const t_flags *flags, bool not_single)
+{
+    DIR *dir;
+    t_directory *inner_files = NULL;
 
     if (not_single)
     {
         mx_printstr(dir_entity->path);
         mx_printstr(":\n");
     }
+    
+    dir = opendir(dir_entity->path);
+    if (dir == NULL)
+    {
+        print_errors(dir_entity, flags->l);
+        return true;
+    }
+
+    inner_files = get_inner_files(dir, dir_entity, flags);
+    closedir(dir);
 
     handle_print_type(false, &inner_files, flags);
 
@@ -50,7 +59,7 @@ bool print_directory(t_directory *dir_entity, t_flags *flags, bool not_single)
     return false;
 }
 
-bool print_directories(t_directory **head, t_flags *flags, bool not_single, int dir_count)
+bool print_directories(t_directory **head, const t_flags *flags, bool not_single, int dir_count)
 {
     bool error = false;
     int dir_idx = 0;

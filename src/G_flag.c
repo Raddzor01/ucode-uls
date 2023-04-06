@@ -28,7 +28,6 @@ void print_G_flag(char* file_name, mode_t st_mode)
     case S_IFSOCK:
         mx_printstr("\033[32m");
         break;
-#define IS_R(m) (m & S_IRUSR && m & S_IRGRP && m & S_IROTH)
     default:
         if(mode & S_IXUSR
         && mode & S_IXGRP
