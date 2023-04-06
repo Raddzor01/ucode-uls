@@ -15,7 +15,7 @@ TESTS=(
 
 for i in "${!TESTS[@]}"
 do
-    echo "Starting test $i: ${TESTS[$i]}"
+    echo "Starting test $i: ${TESTS[$i]["desc"]}"
     if [[ $i == *"desc"* ]]; then
         echo "${TESTS[$i]}"
     else
