@@ -5,36 +5,31 @@ if [ ! -f "./uls" ]; then
 fi
 
 declare -A TESTS=(
-    ["desc"]="Print current directory" 
-    ["cmd"]="diff <(./uls) <(ls)"
-    ["desc"]="Print root directory"
-    ["cmd"]="diff <(./uls /) <(ls /)"
-    ["desc"]="Print long listing format(-l) - Test 1"
-    ["cmd"]="diff <(./uls -l /) <(ls -l /)"
-    ["desc"]="Print long listing format(-l) - Test 2" 
-    ["cmd"]="diff <(./uls -l /dev/null) <(ls -l /dev/null)"
-    ["desc"]="Print long listing format(-l) - Test 3" 
-    ["cmd"]="diff <(./uls -l /usr/bin) <(ls -l /usr/bin)"
-    ["desc"]="Print link" ["cmd"]="diff <(./uls ./src) <(ls ./src)"
+    ["test1_desc"]="Print current directory" ["test1_cmd"]="diff <(./uls) <(ls)"
+    ["test2_desc"]="Print root directory" ["test2_cmd"]="diff <(./uls /) <(ls /)"
+    ["test3_desc"]="Print long listing format(-l) - Test 1" ["test3_cmd"]="diff <(./uls -l /) <(ls -l /)"
+    ["test4_desc"]="Print long listing format(-l) - Test 2" ["test4_cmd"]="diff <(./uls -l /dev/null) <(ls -l /dev/null)"
+    ["test5_desc"]="Print long listing format(-l) - Test 3" ["test5_cmd"]="diff <(./uls -l /usr/bin) <(ls -l /usr/bin)"
+    ["test6_desc"]="Print link" ["test6_cmd"]="diff <(./uls ./src) <(ls ./src)"
 )
 
-i=0
-for key in "${!TESTS[@]}"; do
-    if [ "$key" == "desc" ]; then
-        echo "Starting test $i"
-        echo "${TESTS[$key]}"
+for i in "${!TESTS[@]}"
+do
+    if [[ $i == *"desc" ]]; then
+        # Вывод описания теста
+        echo "Starting test $((i/2 + 1))"
+        echo "${TESTS[$i]}"
     else
         # Выполнение тестового сценария
-        OUTPUT=$(eval "${TESTS[$key]}")
+        OUTPUT=$(eval "${TESTS[$i]}")
 
         # Проверка результата выполнения теста
         if [ "$OUTPUT" != "" ]
         then
-            echo "Test failed: ${TESTS[$key]}"
+            echo "Test failed: ${TESTS[$i-1]}"
             echo "$OUTPUT"
         else
-            echo "Success: ${TESTS[$key]}"
+            echo "Success: ${TESTS[$i-1]}"
         fi
-        ((i++))
     fi
 done
