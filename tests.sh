@@ -13,6 +13,7 @@ declare -A TESTS=(
     ["test6_desc"]="Print link" ["test6_cmd"]="diff <(./uls ./src) <(ls ./src)"
 )
 
+key=0
 for i in "${!TESTS[@]}"
 do
     if [[ $i == *"desc" ]]; then
@@ -29,7 +30,8 @@ do
             echo "Test failed: ${TESTS[$i-1]}"
             echo "$OUTPUT"
         else
-            echo "Success: ${TESTS[$i-1]}"
+            echo "Success: ${key}}"
         fi
+        ((key++))
     fi
 done
