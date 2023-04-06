@@ -1,6 +1,6 @@
 #!/bin/bash
 
-make reinstall
+make
 
 TESTS=(
     ["desc"]="Start Basic tests"
@@ -13,23 +13,37 @@ TESTS=(
     ["desc"]="End Basic tests"
 )
 
-for i in "${!TESTS[@]}"
-do
-    if [[ $i == *"desc"* ]]; then
-        echo "${TESTS[$i]}"
-    else
-        if [ -n "${TESTS[$i]}" ]; then
-            OUTPUT=$(bash -c "${TESTS[$i]}")
-        else
-            OUTPUT=$(./uls -a)
-        fi
-
-        if [ "$OUTPUT" != "" ]
-        then
+for i in "${!TESTS[@]}"; do
+    if [[ ${TESTS[$i]} == "desc" ]]; then
+        echo "${TESTS[$i+1]}"
+    elif [[ ${TESTS[$i]} == "cmd" ]]; then
+        OUTPUT=$(bash -c "${TESTS[$i+1]}")
+        if [[ "$OUTPUT" != "" ]]; then
             echo "Test failed: ${TESTS[$i-1]}"
             echo "$OUTPUT"
         else
-            echo "Success test ${i}"
+            echo "Test succeeded: ${TESTS[$i-1]}"
         fi
     fi
 done
+
+# for i in "${!TESTS[@]}"
+# do
+#     if [[ $i == *"desc"* ]]; then
+#         echo "${TESTS[$i]}"
+#     else
+#         if [ -n "${TESTS[$i]}" ]; then
+#             OUTPUT=$(bash -c "${TESTS[$i]}")
+#         else
+#             OUTPUT=$(./uls -a)
+#         fi
+
+#         if [ "$OUTPUT" != "" ]
+#         then
+#             echo "Test failed: ${TESTS[$i-1]}"
+#             echo "$OUTPUT"
+#         else
+#             echo "Success test ${i}"
+#         fi
+#     fi
+# done
