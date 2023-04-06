@@ -19,6 +19,8 @@ declare -A BASIC_TESTS=(
     ["test6_cmd"]="diff <(./uls ./src) <(ls ./src)"
 )
 
+total = 0
+
 echo "Starting Basic tests"
 echo "Starting test 0 - Error return check"
 
@@ -27,6 +29,7 @@ if [ $? -eq 1 ]
 then
     echo "Success test 0"
 else
+    ((total++))
     echo "Failed test 0"
 fi
 
@@ -42,6 +45,7 @@ do
 
     if [ "$OUTPUT" != "" ]
     then
+        ((total++))
         echo "Failed test $i"
         echo "Output:"
         echo "$OUTPUT"
@@ -50,7 +54,7 @@ do
     fi
 done
 
-echo "End Basic tests"
+echo "End of Basic tests"
 echo "Starting Creative tests"
 
 declare -A CREATIVE_TESTS=(
@@ -113,6 +117,7 @@ do
 
     if [ "$OUTPUT" != "" ]
     then
+        ((total++))
         echo "Failed test $i"
         echo "Output:"
         echo "$OUTPUT"
@@ -120,3 +125,6 @@ do
         echo "Success test $i"
     fi
 done
+
+echo "End of Creative tests"
+echo "Total errors $total"
