@@ -19,57 +19,20 @@ declare -A TESTS=(
     ["test6_cmd"]="diff <(./uls ./src) <(ls ./src)"
 )
 
-desc_index=0
-cmd_index=0
-
-for i in "${!TESTS[@]}"
+for i in $(seq 1 ${#TESTS[@]} / 2) # итерируем от 1 до количества элементов в массиве
 do
-    if [[ $i == *"desc"* ]]; then
-        ((desc_index++))
-        cmd_index=$((desc_index*2))
+    desc_key="test${i}_desc"
+    cmd_key="test${i}_cmd"
 
-        # Вывод описания теста
-        echo "Starting test $desc_index"
-        echo "${TESTS[$i]}"
-    else
-        ((cmd_index++))
+    echo "Starting test ${TESTS[$desc_key]}..."
 
-        # Выполнение тестового сценария
-        OUTPUT=$(eval "${TESTS[$i]}")
+    OUTPUT=$(eval "${TESTS[$cmd_key]}")
 
-        # Проверка результата выполнения теста
-        if [ "$OUTPUT" != "" ]
-        then
-            echo "Test failed: ${TESTS[$(($cmd_index-1))]}"
-            echo "$OUTPUT"
-        else
-            echo "Success: ${TESTS[$(($cmd_index-1))]}"
-        fi
-    fi
-
-    if [ $cmd_index -eq ${#TESTS[@]} ]
+    if [ "$OUTPUT" != "" ]
     then
-        break
+        echo "Failed:"
+        echo "$OUTPUT"
+    else
+        echo "Success"
     fi
 done
-
-# for i in $(seq 1 ${#TESTS[@]}) # итерируем от 1 до количества элементов в массиве
-# do
-#     desc_key="test${i}_desc"
-#     cmd_key="test${i}_cmd"
-
-#     # Вывод описания теста
-#     echo "Starting test ${TESTS[$desc_key]}..."
-
-#     # Выполнение тестового сценария
-#     OUTPUT=$(eval "${TESTS[$cmd_key]}")
-
-#     # Проверка результата выполнения теста
-#     if [ "$OUTPUT" != "" ]
-#     then
-#         echo "Failed:"
-#         echo "$OUTPUT"
-#     else
-#         echo "Success"
-#     fi
-# done
