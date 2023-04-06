@@ -4,7 +4,7 @@ if [ ! -f "./uls" ]; then
     make
 fi
 
-declare -A TESTS=(
+TESTS=(
     ["desc"]="Print current directory" ["cmd"]="diff <(./uls) <(ls)"
     ["desc"]="Print root directory" ["cmd"]="diff <(./uls /) <(ls /)"
     ["desc"]="Print long listing format(-l) - Test 1" ["cmd"]="diff <(./uls -l /) <(ls -l /)"
