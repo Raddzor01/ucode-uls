@@ -21,12 +21,10 @@ declare -A TESTS=(
 key = 0
 for i in "${!TESTS[@]}"
 do
-    echo "Starting test $key"
     if [[ $i == *"desc"* ]]; then
-        # Вывод описания теста
         echo "${TESTS[$i]}"
     else
-        # Выполнение тестового сценария
+        echo "Starting test $key"
         OUTPUT=$(eval "${TESTS[$i]}")
 
         # Проверка результата выполнения теста
@@ -37,6 +35,6 @@ do
         else
             echo "Success: ${TESTS[$i]}"
         fi
-        ((i++))
+        ((key++))
     fi
 done
