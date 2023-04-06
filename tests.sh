@@ -24,15 +24,16 @@ do
     desc_key="test${i}_desc"
     cmd_key="test${i}_cmd"
 
-    echo "Starting test ${TESTS[$desc_key]}..."
+    echo "Starting test $i - ${TESTS[$desc_key]}...."
 
     OUTPUT=$(eval "${TESTS[$cmd_key]}")
 
     if [ "$OUTPUT" != "" ]
     then
-        echo "Failed:"
+        echo "Failed test $i"
+        echo "Output:"
         echo "$OUTPUT"
     else
-        echo "Success"
+        echo "Success test $i"
     fi
 done
