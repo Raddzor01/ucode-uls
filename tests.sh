@@ -10,7 +10,7 @@ TESTS=(
     ["desc"]="Print long listing format(-l) - Test 1" ["cmd"]="diff <(./uls -l /) <(ls -l /)"
     ["desc"]="Print long listing format(-l) - Test 2" ["cmd"]="diff <(./uls -l /dev/null) <(ls -l /dev/null)"
     ["desc"]="Print long listing format(-l) - Test 3" ["cmd"]="diff <(./uls -l /usr/bin) <(ls -l /usr/bin)"
-    ["desc"]="Print link" ["cmd"]="diff <(./uls ./src) <(ls -l ./src)"
+    ["desc"]="Print link" ["cmd"]="diff <(./uls ./src) <(ls ./src)"
 )
 
 for i in "${!TESTS[@]}"
