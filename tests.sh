@@ -5,7 +5,7 @@ if [ ! -f "./uls" ]; then
 fi
 
 TESTS=(
-    ["test1_desc"]="Print current directory" 
+    ["test1_desc"]="Print current directory"
     ["test1_cmd"]="diff <(./uls) <(ls)"
     ["test2_desc"]="Print root directory" 
     ["test2_cmd"]="diff <(./uls /) <(ls /)"
@@ -15,29 +15,27 @@ TESTS=(
     ["test4_cmd"]="diff <(./uls -l /dev/null) <(ls -l /dev/null)"
     ["test5_desc"]="Print long listing format(-l) - Test 3" 
     ["test5_cmd"]="diff <(./uls -l /usr/bin) <(ls -l /usr/bin)"
-    ["test6_desc"]="Print link" 
-    ["test6_cmd"]="diff <(./uls ./src) <(ls ./src)"
+    ["test6_desc"]="Print link" ["test6_cmd"]="diff <(./uls ./src) <(ls ./src)"
 )
 
-key=0
-for i in "${!TESTS[@]}"
-do
-    if [[ $i == *"desc" ]]; then
-        # Вывод описания теста
-        echo "Starting test $key"
-        echo "${TESTS[$i]}"
-    else
-        # Выполнение тестового сценария
-        OUTPUT=$(eval "${TESTS[$i]}")
 
-        # Проверка результата выполнения теста
-        if [ "$OUTPUT" != "" ]
-        then
-            echo "Test failed: ${TESTS[$i-1]}"
-            echo "$OUTPUT"
-        else
-            echo "Success: $key"
-        fi
-        ((key++))
+for i in $(seq 1 ${#TESTS[@]}) # итерируем от 1 до количества элементов в массиве
+do
+    desc_key="test${i}_desc"
+    cmd_key="test${i}_cmd"
+
+    # Вывод описания теста
+    echo "${TESTS[$desc_key]}"
+
+    # Выполнение тестового сценария
+    OUTPUT=$(eval "${TESTS[$cmd_key]}")
+
+    # Проверка результата выполнения теста
+    if [ "$OUTPUT" != "" ]
+    then
+        echo "Test failed: ${TESTS[$desc_key]}"
+        echo "$OUTPUT"
+    else
+        echo "Success: ${TESTS[$desc_key]}"
     fi
 done
