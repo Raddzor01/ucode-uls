@@ -18,7 +18,7 @@ for i in "${!TESTS[@]}"
 do
     if [[ $i == *"desc" ]]; then
         # Вывод описания теста
-        echo "Starting test ${key}"
+        echo "Starting test $key"
         echo "${TESTS[$i]}"
     else
         # Выполнение тестового сценария
@@ -30,7 +30,7 @@ do
             echo "Test failed: ${TESTS[$i-1]}"
             echo "$OUTPUT"
         else
-            echo "Success: ${key}"
+            echo "Success: $key"
         fi
         ((key++))
     fi
