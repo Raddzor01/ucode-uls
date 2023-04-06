@@ -18,23 +18,23 @@ declare -A TESTS=(
     ["desc"]="Print link" ["cmd"]="diff <(./uls ./src) <(ls ./src)"
 )
 
-key = 0
-for i in "${!TESTS[@]}"
-do
-    if [[ $i == *"desc"* ]]; then
-        echo "${TESTS[$i]}"
+i=0
+for key in "${!TESTS[@]}"; do
+    if [ "$key" == "desc" ]; then
+        echo "Starting test $i"
+        echo "${TESTS[$key]}"
     else
-        echo "Starting test $key"
-        OUTPUT=$(eval "${TESTS[$i]}")
+        # Выполнение тестового сценария
+        OUTPUT=$(eval "${TESTS[$key]}")
 
         # Проверка результата выполнения теста
         if [ "$OUTPUT" != "" ]
         then
-            echo "Test failed: ${TESTS[$i]}"
+            echo "Test failed: ${TESTS[$key]}"
             echo "$OUTPUT"
         else
-            echo "Success: ${TESTS[$i]}"
+            echo "Success: ${TESTS[$key]}"
         fi
-        ((key++))
+        ((i++))
     fi
 done
