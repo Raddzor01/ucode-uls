@@ -4,7 +4,7 @@ if [ ! -f "./uls" ]; then
     make
 fi
 
-TESTS=(
+declare -A TESTS=(
     ["desc"]="Print current directory" ["cmd"]="diff <(./uls) <(ls)"
     ["desc"]="Print root directory" ["cmd"]="diff <(./uls /) <(ls /)"
     ["desc"]="Print long listing format(-l) - Test 1" ["cmd"]="diff <(./uls -l /) <(ls -l /)"
@@ -13,24 +13,23 @@ TESTS=(
     ["desc"]="Print link" ["cmd"]="diff <(./uls ./src) <(ls ./src)"
 )
 
-
-i=0
-for key in "${!TESTS[@]}"; do
-    if [ "$key" == "desc" ]; then
-        echo "Starting test $i"
-        echo "${TESTS[$key]}"
+for i in "${!TESTS[@]}"
+do
+    echo "Starting test $i"
+    if [[ $i == *"desc"* ]]; then
+        # Вывод описания теста
+        echo "${TESTS[$i]}"
     else
         # Выполнение тестового сценария
-        OUTPUT=$(eval "${TESTS[$key]}")
+        OUTPUT=$(eval "${TESTS[$i]}")
 
         # Проверка результата выполнения теста
         if [ "$OUTPUT" != "" ]
         then
-            echo "Test failed: ${TESTS[$key]}"
+            echo "Test failed: ${TESTS[$i]}"
             echo "$OUTPUT"
         else
-            echo "Success: ${TESTS[$key]}"
+            echo "Success: ${TESTS[$i]}"
         fi
-        ((i++))
     fi
 done
