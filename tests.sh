@@ -19,7 +19,7 @@ declare -A TESTS=(
     ["test6_cmd"]="diff <(./uls ./src) <(ls ./src)"
 )
 
-for i in $(seq 1 $(({#TESTS[@]} / 2))) # итерируем от 1 до количества элементов в массиве
+for i in $(seq 1 $((${#TESTS[@]} / 2))) # итерируем от 1 до количества элементов в массиве
 do
     desc_key="test${i}_desc"
     cmd_key="test${i}_cmd"
