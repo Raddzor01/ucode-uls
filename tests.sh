@@ -20,6 +20,16 @@ declare -A BASIC_TESTS=(
 )
 
 echo "Starting Basic tests"
+echo "Starting test 0 - Error return check"
+
+./uls /nonexistent/directory
+if [ $? -eq 1 ]
+then
+    echo "Success test 0"
+else
+    echo "Failed test 0"
+fi
+
 
 for i in $(seq 1 $((${#BASIC_TESTS[@]} / 2)))
 do
