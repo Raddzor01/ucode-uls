@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -std=c99 -Wall -Wextra -Wpedantic -D_GNU_SOURCE
+CFLAGS = -std=c99 -Wall -Wextra -Wpedantic -Werror
 
 NAME = uls
 
