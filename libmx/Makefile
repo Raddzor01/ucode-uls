@@ -22,7 +22,7 @@ $(NAME): $(OBJ_FILES)
 $(OBJ_FILES): | $(OBJ_FOLDER)
 
 $(OBJ_FOLDER)/%.o: $(SRC_FOLDER)/%.c $(INC_FILES)
-	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INC_FOLDER) -s
+	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INC_FOLDER)
 
 $(OBJ_FOLDER):
 	@$(MKDIR) $@
