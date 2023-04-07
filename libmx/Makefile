@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic -Werror
+CFLAGS = -std=c11 -Wall -Wextra -Werror -Wpedantic
 NAME = libmx.a
 
 OBJ_FOLDER = obj
@@ -22,7 +22,7 @@ $(NAME): $(OBJ_FILES)
 $(OBJ_FILES): | $(OBJ_FOLDER)
 
 $(OBJ_FOLDER)/%.o: $(SRC_FOLDER)/%.c $(INC_FILES)
-	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INC_FOLDER)
+	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INC_FOLDER) -s
 
 $(OBJ_FOLDER):
 	@$(MKDIR) $@

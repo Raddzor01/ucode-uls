@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -std=c99 -Wall -Wextra -Wpedantic -Werror
+CFLAGS = -std=c11 -Wall -Wextra -Wpedantic -Werror
 
 NAME = uls
 
@@ -23,12 +23,12 @@ MAKE_LIB = make -sC
 all: $(LIB_A) $(NAME) clean
 
 $(NAME): $(OBJ_FILES)
-	$(CC) $(CFLAGS) $(OBJ_FILES) -L$(LIB_DIR) -lmx -o $@ -s
+	$(CC) $(CFLAGS) $(OBJ_FILES) -L$(LIB_DIR) -lmx -o $@
 
 $(OBJ_FILES): | $(OBJ_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(INC_FILES)
-	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INC_DIR) -I$(LIB_INC)
+	@$(CC) $(CFLAGS) -c $< -o $@ -I $(INC_DIR) -I$(LIB_INC) -s
 
 $(OBJ_DIR):
 	@$(MKDIR) $@
